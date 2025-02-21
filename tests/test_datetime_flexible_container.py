@@ -1,3 +1,6 @@
+# Note: The Flet development team have yet to implement a testing suite, which leaves manual testing as the most time-effective approach for simple control.
+
+
 import flet as ft
 
 from auto_pickers.datetime_flexible_container import DateTimeFlag, DateTimeFlexibleContainer

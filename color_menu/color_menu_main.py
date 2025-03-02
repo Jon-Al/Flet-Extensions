@@ -6,12 +6,10 @@ from flet import Page, Colors, Theme
 from flet.core import alignment
 from flet.core.banner import Banner
 from flet.core.buttons import ButtonStyle
-from flet.core.container import Container
 from flet.core.icon import Icon
 from flet.core.icons import Icons
 from flet.core.menu_bar import MenuStyle, MenuBar
 from flet.core.menu_item_button import MenuItemButton
-from flet.core.responsive_row import ResponsiveRow
 from flet.core.snack_bar import SnackBar
 from flet.core.submenu_button import SubmenuButton
 from flet.core.text import Text
@@ -348,6 +346,7 @@ def create_color_menu(page: Page):
         ), controls=[])
     menubar.controls.append(create_random_scheme_item(page))
     menubar.controls.append(create_custom_color_scheme_menu_subitem(custom_schemes, page))
+
     for swatch in swatches:
         menubar.controls.append(create_color_menu_subitem(swatch, page))
     return menubar

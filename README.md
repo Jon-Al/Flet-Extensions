@@ -8,7 +8,7 @@
     * Pressing on the 'Random' menu item will randomize the color scheme, and open a banner
         * The banner can be closed, or
     * Define your own custom themes in ``color_scheme_button.py``.
-    * See the [example](https://flet-controls-gallery.fly.dev/navigation/menubar) for more details.
+    * See the [example](https://github.com/Jon-Al/Flet-Extensions/blob/main/color_menu/color_scheme_menu_example.py) for more details.
 
 ### Related Links
 

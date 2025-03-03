@@ -1,6 +1,7 @@
 import flet as ft
 
 from color_menu.color_menu_main import create_color_menu
+from dark_theme_toggle import theme_toggle_button
 
 
 name = "Theme colors"
@@ -92,6 +93,7 @@ def main(page: ft.Page):
     page.theme.color_scheme_seed = 'blue'
     page.add(example())
     page.update()
+    page.add(theme_toggle_button(page))
 
 
 if __name__ == "__main__":

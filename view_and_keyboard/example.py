@@ -12,22 +12,20 @@ def main(page: ft.Page):
         if len(view_pop_history) > 0:
             page.views.append(view_pop_history.pop())
             page.update()
-            print(f'last view: view history: {len(view_pop_history)} page.views: {len(page.views)}')
 
     def next_view(e):
         if len(page.views) > 0:
             view_pop_history.append(page.views.pop())
             page.update()
-            print(f'next view: view history: {len(view_pop_history)} page.views: {len(page.views)}')
 
     demo_text = ft.Text("Demo Text")
     last_view_button = ft.Button("Last View", on_click=lambda e: last_view(e))
     next_view_button = ft.Button("Next View", on_click=lambda e: next_view(e))
     views = [TemplateView([demo_text, last_view_button, next_view_button]) for i in range(10)]
-    for v in views:
-        v.controls.append(ft.Text(f"{v.bgcolor}"))
+    for i, v in enumerate(views):
+        v.controls.append(ft.Text(f"I am view number {10 - i}/10"))
         page.views.append(v)
-    page.add(ft.Text("Another Text"))
+    page.add(ft.Text("No View"))
     page.add(last_view_button)
     page.add(next_view_button)
     kih = KeyboardInputHandler(page)

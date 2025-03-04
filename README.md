@@ -9,6 +9,10 @@
         * The banner can be closed, or
     * Define your own custom themes in ``color_scheme_button.py``.
     * See the [example](https://github.com/Jon-Al/Flet-Extensions/blob/main/color_menu/color_scheme_menu_example.py) for more details.
+* [Views and Keyboard Input Handler](https://github.com/Jon-Al/Flet-Extensions/tree/main/view_and_keyboard) - Proof of concept for keyboard inputs.
+    * [KeyboardInputHandler](https://github.com/Jon-Al/Flet-Extensions/tree/main/view_and_keyboard/keyboard_input_handler.py) - A class to manage and handle keyboard inputs, instead of having to manage them individually. Uses a fairly simple system.
+    * Also demonstrates hwo to work with Views.
+    * See [example](https://github.com/Jon-Al/Flet-Extensions/tree/main/view_and_keyboard/example.py) for more information.
 
 ### Related Links
 

@@ -18,4 +18,3 @@
 
 * [Felt GitHub repository](https://github.com/flet-dev/flet)
 * [Flet website](https://flet.dev/)
-  color_menu/color_scheme_menu_example.py

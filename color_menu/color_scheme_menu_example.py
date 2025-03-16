@@ -1,19 +1,20 @@
 import flet as ft
+from flet.core.types import ColorValue
 
-from color_menu.color_menu_main import create_color_menu
-from dark_theme_toggle import theme_toggle_button
-
+from color_menu_main import create_color_menu
+from other.dark_theme_toggle import theme_toggle_button
 
 name = "Theme colors"
 
 
-def example():
-    class Color:
-        def __init__(self, display_name, name, is_dark=False):
-            self.name = name
-            self.display_name = display_name
-            self.is_dark = is_dark
+class Color:
+    def __init__(self, display_name, name, is_dark=False):
+        self.name = name
+        self.display_name = display_name
+        self.is_dark = is_dark
 
+
+def main_display():
     theme_colors = [
         Color("PRIMARY", "primary"),
         Color("ON_PRIMARY", "onprimary"),
@@ -72,7 +73,6 @@ def example():
             text_color = ft.Colors.SURFACE
         else:
             text_color = ft.Colors.ON_SURFACE
-
         theme_colors_rows.controls.append(
             ft.Container(
                 bgcolor=color.name,
@@ -83,7 +83,6 @@ def example():
                 height=50
             )
         )
-
     return ft.Container(border_radius=10, content=theme_colors_rows)
 
 
@@ -91,7 +90,7 @@ def main(page: ft.Page):
     page.add(ft.Container(create_color_menu(page)))
     page.theme = ft.Theme()
     page.theme.color_scheme_seed = 'blue'
-    page.add(example())
+    page.add(main_display())
     page.update()
     page.add(theme_toggle_button(page))
 

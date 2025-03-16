@@ -2,7 +2,7 @@ import pytest
 import flet as ft
 from unittest.mock import MagicMock
 
-from dark_theme_toggle import theme_toggle_button
+from other.dark_theme_toggle import theme_toggle_button
 
 
 @pytest.fixture

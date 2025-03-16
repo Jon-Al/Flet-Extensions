@@ -1,6 +1,4 @@
 import flet as ft
-from flet.core.types import ColorValue
-
 from color_menu_main import create_color_menu
 from other.dark_theme_toggle import theme_toggle_button
 

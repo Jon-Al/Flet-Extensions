@@ -14,6 +14,7 @@
     * Also demonstrates hwo to work with Views.
     * See [example](https://github.com/Jon-Al/Flet-Extensions/tree/main/view_and_keyboard/example.py) for more information.
 * [Date Field](https://github.com/Jon-Al/Flet-Extensions/tree/main/other/date_field.py) - A textfield with a DateInput, meant for inputting dates. Allows inputting dates without adding the overlay. Error on invalid entry is enabled, with a limited error checking. Uses python-dateutils 2.9.0. Contains an example in the file.
+* [Time Field](https://github.com/Jon-Al/Flet-Extensions/tree/main/other/time_field.py) - similar to Date Field, but for time instead of date.
 
 ### Related Links
 

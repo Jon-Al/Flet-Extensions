@@ -1,15 +1,14 @@
-import re
-from datetime import datetime
+from datetime import datetime, time
 from typing import Any, Optional, Union
 
 import flet as ft
 from dateutil import parser
-from flet import DatePicker
+from flet import TimePicker
 from flet.core.animation import AnimationValue
 from flet.core.badge import BadgeValue
-from flet.core.date_picker import DatePickerEntryMode
 from flet.core.text_style import StrutStyle
 from flet.core.textfield import KeyboardType
+from flet.core.time_picker import TimePickerEntryMode
 from flet.core.tooltip import TooltipValue
 from flet.core.types import (
     BorderRadiusValue,
@@ -20,20 +19,16 @@ from flet.core.types import (
     PaddingValue,
     ResponsiveNumber,
     RotateValue,
-    ScaleValue, DateTimeValue, )
+    ScaleValue, )
 
 from other.placement import Placement
 
-name = "Date field"
 
-
-class DateField(ft.TextField):
+class TimeField(ft.TextField):
     def __init__(
             self,
-            current_date: DateTimeValue = datetime.now(),
-            first_date: DateTimeValue = datetime(year=1900, month=1, day=1),
-            last_date: DateTimeValue = datetime(year=2050, month=1, day=1),
-            datepicker_placement: Optional[Placement] = Placement.DEFAULT,
+            current_time: Optional[time] = datetime.now().time(),
+            timepicker_placement: Optional[Placement] = Placement.DEFAULT,
             read_only: Optional[bool] = None,
             text_align: Optional[ft.TextAlign] = None,
             show_cursor: Optional[bool] = None,
@@ -57,7 +52,7 @@ class DateField(ft.TextField):
             text_size: ft.OptionalNumber = None,
             text_style: Optional[ft.TextStyle] = None,
             text_vertical_align: Union[ft.VerticalAlignment, ft.OptionalNumber] = None,
-            label: Optional[Union[str, ft.Control]] = "Input date",
+            label: Optional[Union[str, ft.Control]] = "Input time",
             label_style: Optional[ft.TextStyle] = None,
             border: Optional[ft.InputBorder] = None,
             color: Optional[ColorValue] = None,
@@ -74,7 +69,7 @@ class DateField(ft.TextField):
             filled: Optional[bool] = None,
             fill_color: Optional[ColorValue] = None,
             hover_color: Optional[ColorValue] = None,
-            hint_text: Optional[str] = "YYYY-MM-DD",
+            hint_text: Optional[str] = "HH:MM (AM/PM)",
             hint_style: Optional[ft.TextStyle] = None,
             helper: Optional[ft.Control] = None,
             helper_text: Optional[str] = None,
@@ -121,25 +116,18 @@ class DateField(ft.TextField):
             data: Any = None,
             rtl: Optional[bool] = None,
             adaptive: Optional[bool] = None):
-
-        self.__date_patter = re.compile(r"^([0-9]{0,4})"
-                                        r"^([0-9]{0,4})-"
-
-                                        r"([0-9]{0,2}(?:-[0-9]{0,2})?)?")
-        self._date_picker = DatePicker(value=None, date_picker_entry_mode=DatePickerEntryMode.CALENDAR_ONLY,
+        self._time_picker = TimePicker(value=current_time, time_picker_entry_mode=TimePickerEntryMode.DIAL_ONLY,
                                        on_change=self._on_dismiss,
-                                       on_dismiss=self._on_dismiss, current_date=current_date,
-                                       first_date=first_date, last_date=last_date)
+                                       on_dismiss=self._on_dismiss)
 
-        self._datepicker_button = ft.IconButton(
-            icon=ft.Icons.EDIT_CALENDAR,
-            tooltip="Open Date Picker",
-            on_click=lambda e: self.page.open(self._date_picker) if self.page else None
+        self._timepicker_button = ft.IconButton(
+            icon=ft.Icons.TIMER,
+            tooltip="Open Time Picker",
+            on_click=lambda e: self.page.open(self._time_picker) if self.page else None
         )
 
         # Call parent constructor with modified parameters
         super().__init__(
-            value=self._date_to_string(self._date_picker.value, None),
             keyboard_type=KeyboardType.TEXT,
             multiline=False,
             min_lines=1,
@@ -230,22 +218,27 @@ class DateField(ft.TextField):
             rtl=rtl,
             adaptive=adaptive
         )
-        self._datepicker_placement = None
-        self.datepicker_placement = datepicker_placement
+        self._timepicker_placement = None
+        self.timepicker_placement = timepicker_placement
         self.on_submit = on_submit
         self.on_blur = on_blur
         self.on_change = on_change
+        # Initialize with the current time in HH:MM format
+        if current_time:
+            self.value = current_time.strftime("%H:%M")
+        else:
+            self.value = datetime.now().time().strftime("%H:%M")
         self._last_input = self.value
 
     @property
-    def datepicker_placement(self):
-        return self._datepicker_placement
+    def timepicker_placement(self):
+        return self._timepicker_placement
 
-    @datepicker_placement.setter
-    def datepicker_placement(self, value: Optional[Placement]):
-        if value == self._datepicker_placement:
+    @timepicker_placement.setter
+    def timepicker_placement(self, value: Optional[Placement]):
+        if value == self._timepicker_placement:
             return
-        match self._datepicker_placement:
+        match self._timepicker_placement:
             case Placement.DEFAULT | Placement.BEFORE:
                 self.icon = None
             case Placement.PREFIX:
@@ -256,37 +249,17 @@ class DateField(ft.TextField):
                 pass
         match value:
             case Placement.DEFAULT | Placement.BEFORE:
-                self.icon = self._datepicker_button
+                self.icon = self._timepicker_button
             case Placement.PREFIX:
-                self.prefix = self._datepicker_button
+                self.prefix = self._timepicker_button
             case Placement.SUFFIX:
-                self.suffix = self._datepicker_button
+                self.suffix = self._timepicker_button
             case Placement.DISABLED:
-                self._datepicker_button.visible = False
-                self._datepicker_button.disabled = True
-        self._datepicker_placement = value
+                self._timepicker_button.visible = False
+                self._timepicker_button.disabled = True
+        self._timepicker_placement = value
         if self.page:
             self.update()
-
-    @property
-    def first_date(self):
-        return self._date_picker.first_date
-
-    @first_date.setter
-    def first_date(self, value: Optional[datetime]):
-        self._date_picker.first_date = value
-
-    @property
-    def current_date(self):
-        return self._date_picker.current_date
-
-    @property
-    def last_date(self):
-        return self._date_picker.last_date
-
-    @last_date.setter
-    def last_date(self, value: Optional[datetime]):
-        self._date_picker.last_date = value
 
     @property
     def value(self) -> Optional[str]:
@@ -294,34 +267,46 @@ class DateField(ft.TextField):
 
     @value.setter
     def value(self, value: Optional[str]):
-        if self._parse_date_string(value, None) is not None:
+        if self._parse_time_string(value, None) is not None:
             self._set_attr("value", value)
         else:
             self._set_attr("value", '')
 
     def _on_dismiss(self, e):
-        value = self._date_to_string(self._date_picker.value, None)
-        if value is not None:
-            self.value = value
-            self.on_change(e)
+        if self._time_picker.value:
+            value = self._time_to_string(self._time_picker.value, None)
+            if value is not None:
+                self.value = value
+                self.on_change(e)
 
     @property
-    def date_value(self) -> datetime | None:
-        return self._parse_date_string(self.value, None)
+    def time_value(self) -> time | None:
+        return self._parse_time_string(self.value, None)
 
     @staticmethod
-    def _parse_date_string(date: str, default: Any):
+    def _parse_time_string(time_str: str, default: Any) -> time | None:
         try:
-            r = parser.parse(date, dayfirst=False, yearfirst=True, fuzzy=False)
-            return r
+            # Try parsing various time formats
+            if time_str is None or time_str.strip() == '':
+                return default
+
+            # Handle 24-hour format (HH:MM)
+            if ':' in time_str and len(time_str.split(':')) == 2:
+                hour, minute = map(int, time_str.split(':'))
+                if 0 <= hour < 24 and 0 <= minute < 60:
+                    return time(hour, minute)
+
+            # Try using dateutil parser as fallback
+            parsed_time = parser.parse(time_str).time()
+            return parsed_time
         except (ValueError, TypeError, parser.ParserError):
             return default
 
     @staticmethod
-    def _date_to_string(date: datetime, default: Any):
+    def _time_to_string(time_value: time, default: Any) -> str | None:
         try:
-            return datetime.strftime(date, "%Y-%m-%d")
-        except (ValueError, TypeError, parser.ParserError):
+            return time_value.strftime("%H:%M")
+        except (ValueError, TypeError, AttributeError):
             return default
 
     # on_change
@@ -332,7 +317,7 @@ class DateField(ft.TextField):
     @on_change.setter
     def on_change(self, handler: OptionalControlEventCallable):
         def _on_change(e):
-            if self.error_text is not None and len(self.value) <= 10:
+            if self.error_text is not None and len(self.value) <= 5:
                 self.error_text = None
                 self.update()
             if handler:
@@ -349,13 +334,13 @@ class DateField(ft.TextField):
     @on_submit.setter
     def on_submit(self, handler: OptionalControlEventCallable):
         def _on_submit(e):
-            result = self._parse_date_string(self.value, None)
+            result = self._parse_time_string(self.value, None)
             if result is not None:
-                self.value = result.strftime("%Y-%m-%d")
+                self.value = result.strftime("%H:%M")
                 if handler:
                     handler(e)
             else:
-                self.error_text = "Invalid entry; use YYYY-MM-DD format."
+                self.error_text = "Invalid entry; use HH:MM (24H) format."
             self.update()
             self._last_input = self.value
 
@@ -369,15 +354,15 @@ class DateField(ft.TextField):
     @on_blur.setter
     def on_blur(self, handler: OptionalControlEventCallable):
         def _on_blur(e):
-            result = self._parse_date_string(self.value, None)
+            result = self._parse_time_string(self.value, None)
             if result is not None:
-                self.value = result.strftime("%Y-%m-%d")
+                self.value = result.strftime("%H:%M")
                 if handler:
                     handler(e)
             elif len(self.value) == 0 and handler:
                 handler(e)
             else:
-                self.error_text = "Invalid; use YYYY-MM-DD format."
+                self.error_text = "Invalid; use HH:MM format."
             self.update()
             self._last_input = self.value
 
@@ -386,7 +371,7 @@ class DateField(ft.TextField):
 
 def main(page: ft.Page):
     page.add(
-        DateField()
+        TimeField()
     )
 
 
